@@ -10,7 +10,4 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    // 깃 테스트2
-
-
 }
