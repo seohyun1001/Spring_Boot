@@ -78,17 +78,22 @@ public class BoardRepositoryTests {
 
     @Test
     public void testSelectAll() {
+        // 동적 WHERE절을 위한 조건식 값 설정하기 (title, content, writer)
         String[] types = {"t", "c", "w"};
+        // 검색할 문자열 저장
         String keyword = "1";
+        // 몇 개의 데이터를 어떤 정렬로 검색할지 설정
         Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+        // 위의 조건식으로 데이터베이스에서 조회하는 레포지토리 실행
         Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
 
         log.info(result.getTotalPages());
         log.info(result.getSize());
         log.info(result.getNumber());
+        // hasPrevious : 이전 페이지가 있는지
+        // hasNext : 다음 페이지가 있는지
         log.info(result.hasPrevious() + " : " + result.hasNext());
+
         result.getContent().forEach(board -> log.info(board));
     }
 }
-
-
