@@ -9,6 +9,9 @@
 <!--<hr/>-->
 <!--<h4 th:text="${list}"></h4>-->
 
+<!--반복문 / 제어문 처리-->
+<!--status : index, count, size, first, last, add, even-->
+
     <ul>
         <li th:each="str: ${list}" th:text="${str}"></li>
     </ul>
@@ -19,12 +22,14 @@
         </th:block>
     </ul>
 
+<!--반복문의 status 변수-->
     <ul>
         <li th:each="str,status: ${list}">
             [[${status.index}]] -- [[${str}]]
         </li>
     </ul>
 
+<!--th:if / th:unless / th:switch-->
     <ul>
         <li th:each="str,status: ${list}">
             <span th:if="${status.odd}"> ODD == [[${str}]]</span>
@@ -38,6 +43,7 @@
         </li>
     </ul>
 
+<!-- ? 삼항연산자-->
     <ul>
         <li th:each="str,status: ${list}">
             <span th:text="${status.odd} ?'ODD ---' + ${str} : 'EVEN ---' + ${str}"></span>
@@ -53,6 +59,7 @@
             </th:block>
         </li>
     </ul>
+
 
 </body>
 </html>
