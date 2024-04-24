@@ -70,5 +70,45 @@ public class SampleController {
         model.addAttribute("arr", new String[]{"AAA", "BBB", "CCC"});
     }
 
+    @GetMapping("/example/notice_list")
+    public void notice_list(Model model) {
+        model.addAttribute("arr", new String[]{"AAA", "BBB", "CCC"});
+    }
+
+    @GetMapping("/example/notice_add")
+    public void notice_add(Model model) {
+        model.addAttribute("arr", new String[]{"AAA", "BBB", "CCC"});
+    }
+
+    @GetMapping("/example/notice_view")
+    public void notice_view(Model model) {
+        model.addAttribute("arr", new String[]{"AAA", "BBB", "CCC"});
+    }
+
+    @GetMapping("/example/login")
+    public void login(Model model) {
+
+    }
+
+    @GetMapping("/example/join")
+    public void join(Model model) {
+
+    }
+
+    @GetMapping("/example/index")
+    public void index(Model model) {
+
+    }
+
+    @GetMapping("/example/mypage")
+    public void mypage(Model model) {
+
+    }
+
+    @GetMapping("/example/program")
+    public void program(Model model) {
+
+    }
+
 
 }
