@@ -4,12 +4,18 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.springboot.domain.Board;
 import org.zerock.springboot.dto.BoardDTO;
+import org.zerock.springboot.dto.PageRequestDTO;
+import org.zerock.springboot.dto.PageResponseDTO;
 import org.zerock.springboot.repository.BoardRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -48,5 +54,25 @@ public class BoardServiceImpl implements BoardService{
         boardRepository.deleteById(bno);
     }
 
+    @Override
+    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
+        // 페이지 및 검색 조건 취득
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        // 레포지토리를 실행하여 데이터 취득
+        Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+
+        // VO를 DTO로 변환
+        List<BoardDTO> dtoList = result.stream().map(board -> modelMapper.map(board, BoardDTO.class)).collect(Collectors.toList());
+
+        return PageResponseDTO.<BoardDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
+
+        }
 
 }

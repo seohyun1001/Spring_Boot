@@ -28,7 +28,7 @@ public class PageRequestDTO {
 
 
 
-    public String[] getTypew() {
+    public String[] getTypes() {
         if (type == null || type.isEmpty()){
             return null;
         }

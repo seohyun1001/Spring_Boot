@@ -1,6 +1,8 @@
 package org.zerock.springboot.service;
 
 import org.zerock.springboot.dto.BoardDTO;
+import org.zerock.springboot.dto.PageRequestDTO;
+import org.zerock.springboot.dto.PageResponseDTO;
 
 public interface BoardService {
     // insert
@@ -14,4 +16,7 @@ public interface BoardService {
 
     // delete
     void remove(Long bno);
+
+    // search list
+    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
 }
