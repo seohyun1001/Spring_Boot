@@ -12,6 +12,7 @@ public class BoardServiceTests {
     @Autowired
     private BoardService boardService;
 
+    // insert
     @Test
     public void testRegister() {
         log.info(boardService.getClass().getName());
@@ -23,6 +24,23 @@ public class BoardServiceTests {
                 .build();
         Long bno = boardService.register(boardDTO);
         log.info("bno : " + bno);
+    }
+
+    // update
+    @Test
+    public void testModify() {
+        BoardDTO boardDTO = BoardDTO.builder()
+                .bno(2L)
+                .title("update title --- 2")
+                .content("update content --- 2")
+                .build();
+        boardService.modify(boardDTO);
+    }
+
+    // delete
+    @Test
+    public void testRemove() {
+        boardService.remove(3L);
     }
 
 }
