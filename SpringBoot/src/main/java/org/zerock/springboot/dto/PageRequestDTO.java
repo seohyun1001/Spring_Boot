@@ -48,7 +48,7 @@ public class PageRequestDTO {
             StringBuilder builder = new StringBuilder();
             builder.append("pages=" + this.page);
             builder.append("&size=" + this.size);
-            if (type == null && type.length() > 0){
+            if (type != null && type.length() > 0){
                 builder.append("&type=" + type);
             }
 
