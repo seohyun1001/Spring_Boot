@@ -74,7 +74,8 @@ public class BoardController {
         }
 
         boardService.modify(boardDTO);
-        redirectAttributes.addFlashAttribute("result", "modified");
+        redirectAttributes.addFlashAttribute("result",
+                "modified");
         redirectAttributes.addAttribute("bno", boardDTO.getBno());
         return "redirect:/board/read";
     }
@@ -86,5 +87,6 @@ public class BoardController {
         redirectAttributes.addFlashAttribute("result", "removed");
         return "redirect:/board/list";
     }
+
 
 }

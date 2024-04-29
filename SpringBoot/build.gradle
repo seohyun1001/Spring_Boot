@@ -33,8 +33,10 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+    // mariaDB
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
@@ -52,12 +54,22 @@ dependencies {
     // Model Mapper
     implementation 'org.modelmapper:modelmapper:3.1.0'
 
-
-
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // swagger ui
+    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
+    // 스프링 3버전 이후로는 해당 패키지 지원을 하지 않아 변경
+//    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+//    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+
+    // 블로그 자료에서, 경로 수정.
+    // 참고 블로그, :https://velog.io/@najiexx/Spring-Boot-3%EC%97%90-Swagger-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0springdoc-openapi
+    // 샘플 예제 : https://springdoc.org/#error-handling-for-rest-using-controlleradvice
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
 }
 
