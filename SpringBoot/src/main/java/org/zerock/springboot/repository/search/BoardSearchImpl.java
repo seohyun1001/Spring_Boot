@@ -1,13 +1,16 @@
 package org.zerock.springboot.repository.search;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.expression.spel.ast.Projection;
 import org.zerock.springboot.domain.Board;
 import org.zerock.springboot.domain.QBoard;
+import org.zerock.springboot.domain.QReply;
 import org.zerock.springboot.dto.BoardListReplyCountDTO;
 
 import java.util.List;
@@ -82,7 +85,54 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
     @Override
     public Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable) {
-        return null;
+        // QueryDSL 의 QBoard 사용하기
+        // Query 애너테이션 안에 문자열, sql 문법을 사용시, 컴파일 체크가 안됨
+        // 따라서  QueryDSL 동적으로 사용하면 자바 문법 형식으로 데이터 베이스 타입 변환이 쉬움
+        QBoard board = QBoard.board;
+        QReply reply = QReply.reply;
+
+        // left out join 처리
+        JPQLQuery<Board> query = from(board);
+        query.leftJoin(reply).on(reply.board.eq(board));
+
+        query.groupBy(board);
+
+        if ((types != null && types.length > 0) && keyword != null) {
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+            for (String type : types) {
+                switch (type) {
+                    case "t":
+                        booleanBuilder.or(board.title.contains(keyword));
+                        break;
+
+                    case "c":
+                        booleanBuilder.or(board.content.contains(keyword));
+                        break;
+
+                    case "w":
+                        booleanBuilder.or(board.writer.contains(keyword));
+                        break;
+                }
+            }
+            query.where(booleanBuilder);
+        }
+
+        query.where(board.bno.gt(0L));
+
+        // projection이라는 도구를 이용해서 엔티티 클래스를 DTO 타입으로 자동 형변환해줌
+        JPQLQuery<BoardListReplyCountDTO> dtoQuery = query.select(Projections.bean(BoardListReplyCountDTO.class,
+                board.bno,
+                board.title,
+                board.writer,
+                board.regdate,
+                reply.count().as("replyCount")
+        ));
+
+        this.getQuerydsl().applyPagination(pageable, dtoQuery);
+        List<BoardListReplyCountDTO> dtoList = dtoQuery.fetch();
+        long count = dtoQuery.fetchCount();
+        return new PageImpl<>(dtoList, pageable, count);
     }
 
 
