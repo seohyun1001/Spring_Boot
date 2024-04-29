@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.zerock.springboot.domain.Board;
 import org.zerock.springboot.domain.QBoard;
+import org.zerock.springboot.dto.BoardListReplyCountDTO;
 
 import java.util.List;
 
@@ -78,5 +79,11 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
         return new PageImpl<>(list, pageable, count);
     }
+
+    @Override
+    public Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable) {
+        return null;
+    }
+
 
 }
