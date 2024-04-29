@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.springboot.dto.BoardDTO;
+import org.zerock.springboot.dto.BoardListReplyCountDTO;
 import org.zerock.springboot.dto.PageRequestDTO;
 import org.zerock.springboot.dto.PageResponseDTO;
 import org.zerock.springboot.service.BoardService;
@@ -24,9 +25,10 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    // 게시글에 댓글 개수 표현하는 목록 출력으로 변경
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
-        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCouht(pageRequestDTO);
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
     }

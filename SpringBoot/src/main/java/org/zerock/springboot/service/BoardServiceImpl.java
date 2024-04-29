@@ -9,10 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.springboot.domain.Board;
 import org.zerock.springboot.dto.BoardDTO;
+import org.zerock.springboot.dto.BoardListReplyCountDTO;
 import org.zerock.springboot.dto.PageRequestDTO;
 import org.zerock.springboot.dto.PageResponseDTO;
 import org.zerock.springboot.repository.BoardRepository;
 
+import javax.xml.transform.Result;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,5 +76,21 @@ public class BoardServiceImpl implements BoardService{
                 .build();
 
         }
+
+    @Override
+    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCouht(PageRequestDTO pageRequestDTO) {
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListReplyCountDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
+    }
 
 }

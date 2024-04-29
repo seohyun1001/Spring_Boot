@@ -1,6 +1,7 @@
 package org.zerock.springboot.service;
 
 import org.zerock.springboot.dto.BoardDTO;
+import org.zerock.springboot.dto.BoardListReplyCountDTO;
 import org.zerock.springboot.dto.PageRequestDTO;
 import org.zerock.springboot.dto.PageResponseDTO;
 
@@ -19,4 +20,8 @@ public interface BoardService {
 
     // search list
     PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
+
+    // 게시글 목록에 댓글 개수 표시하기
+    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCouht(PageRequestDTO pageRequestDTO);
+
 }
