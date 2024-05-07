@@ -18,3 +18,9 @@ async function getList({bno, page, size, goLast}){
 
     return result.data
 }
+
+// 댓글 추가
+async function addReply(replyObj){
+    const response = await axios.post(`/replies/`,replyObj)
+    return response.data
+}
