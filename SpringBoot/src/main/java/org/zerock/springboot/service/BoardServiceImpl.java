@@ -78,7 +78,7 @@ public class BoardServiceImpl implements BoardService{
         }
 
     @Override
-    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCouht(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO) {
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();

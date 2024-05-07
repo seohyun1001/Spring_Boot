@@ -22,6 +22,6 @@ public interface BoardService {
     PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
 
     // 게시글 목록에 댓글 개수 표시하기
-    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCouht(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 
 }

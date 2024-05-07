@@ -1,6 +1,5 @@
 package org.zerock.springboot.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,7 +27,7 @@ public class BoardController {
     // 게시글에 댓글 개수 표현하는 목록 출력으로 변경
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCouht(pageRequestDTO);
+        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
     }

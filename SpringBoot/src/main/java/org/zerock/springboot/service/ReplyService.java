@@ -14,7 +14,6 @@ public interface ReplyService {
 
     void remove(Long rno);
 
-    // 페이징 처리
     PageResponseDTO<ReplyDTO> getListOfBoard(Long bno, PageRequestDTO pageRequestDTO);
 
 }

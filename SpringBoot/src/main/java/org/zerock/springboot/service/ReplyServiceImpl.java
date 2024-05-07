@@ -63,7 +63,7 @@ public class ReplyServiceImpl implements ReplyService{
     public PageResponseDTO<ReplyDTO> getListOfBoard(Long bno, PageRequestDTO pageRequestDTO) {
         // PageRequestDTO : 화면에서 백엔드로 보내는 페이징 정보가 들어있다. 현재 페이지, 크기 등
         // 페이징 하기 위한 준비물
-        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() <= 0? 0: pageRequestDTO.getPage() -1,
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() <=0? 0: pageRequestDTO.getPage() -1,
                 pageRequestDTO.getSize(),
                 Sort.by("rno").ascending());
 
