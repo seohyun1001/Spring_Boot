@@ -10,10 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.zerock.springboot.dto.upload.UploadFileDTO;
 import org.zerock.springboot.dto.upload.UploadResultDTO;
 
@@ -22,9 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @Log4j2
@@ -109,22 +104,61 @@ public class UpDownController {
 //        return null;
 //    }
 
+
+
+    // Controller를 이용한 파일 취득 방식
     @Tag(name = "VIEW FILE", description = "GET 방식으로 첨부파일 조회")
     @GetMapping("/view/{fileName}")
     public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
 
-    Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
-    String resourceName = resource.getFilename();
-    HttpHeaders headers = new HttpHeaders();
-    try {
-        headers.add("Content-Type", Files.probeContentType(resource.getFile().toPath()));
-    }catch (IOException e){
-        return ResponseEntity.internalServerError().build();
-    }
-    return ResponseEntity.ok().headers(headers).body(resource);
+        // 파일 받아오기
+        // uploadPath = C:\\upload
+        // File.separator = \\
+        Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
+        String resourceName = resource.getFilename();
+
+        // try 안과 밖, 모두 사용하기 위해 밖에 선언
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            // 이미지 파일의 Content-Type을 설정 : image/jpeg
+            headers.add("Content-Type", Files.probeContentType(resource.getFile().toPath()));
+        }catch (IOException e){
+            // 에러 발생시 에러 스테이터스 전달(500에러/코드 실행시 에러)
+            return ResponseEntity.internalServerError().build();
+        }
+        // 정상 실행시 파일과 정상 스테이터스 전달(200정상실행)
+        // body 부분에 이미지가 들어가게 됨
+        return ResponseEntity.ok().headers(headers).body(resource);
 
     }
 
+    // 파일 삭제
+    @Tag(name = "remove file", description = "DELETE 방식으로 파일 삭제")
+    @DeleteMapping("/remove/{fileName}")
+    public Map<String, Boolean> removeFile(@PathVariable String fileName) {
 
+        Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
+
+        String resourceName = resource.getFilename();
+
+        Map<String, Boolean> resultMap = new HashMap<>();
+        boolean removed = false;
+
+        try {
+            String contentType = Files. probeContentType(resource.getFile().toPath());
+            removed = resource.getFile().delete();
+
+            if (contentType.startsWith("image")) {
+                File thumbnailFile = new File(uploadPath + File.separator,"s_" + resourceName);
+                thumbnailFile.delete();
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+
+        resultMap.put("result", removed);
+        return resultMap;
+
+    }
 
 }
