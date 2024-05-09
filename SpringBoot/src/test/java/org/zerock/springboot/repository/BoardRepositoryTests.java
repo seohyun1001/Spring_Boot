@@ -25,6 +25,9 @@ public class BoardRepositoryTests {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @Test
     public void testInsert() {
         IntStream.range(1, 100).forEach(i -> {
@@ -173,6 +176,15 @@ public class BoardRepositoryTests {
         // 만일 하위 엔티티의 참조가 더 이상 없는 상태가 되면
         // @OneToMany에 orphan-Removal 속성 값을 true로 지정해주어야 실제 삭제가 이루어짐
         // -> Board 클래스의 @OneToMany 속성을 조정 (orphanRemoval = true)
+    }
+
+    @Test
+    @Transactional
+    @Commit
+    public void testRemoveAll() {
+        Long bno = 1L;
+        replyRepository.deleteByBoard_Bno(bno);
+        boardRepository.deleteById(bno);
     }
 
 }
