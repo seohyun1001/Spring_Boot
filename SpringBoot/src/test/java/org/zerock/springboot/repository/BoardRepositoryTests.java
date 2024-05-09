@@ -130,4 +130,18 @@ public class BoardRepositoryTests {
         }
         boardRepository.save(board);
     }
+
+    @Test
+    public void testReadWithImages() {
+        // PK를 이용해 게시글 select 실행
+        Optional<Board> result = boardRepository.findById(1L);
+        // 데이터가 없는 경우 에러발생
+        Board board = result.orElseThrow();
+
+        log.info(board);
+        log.info("---------------------------------");
+        log.info(board.getImageSet());
+        // -> 데이터베이스와 연결이 끝난 상태이므로 'no session'이라는 에러 메세지가 뜬다
+        // -> 해결방법 : @Transactional을 추가함 -> 커밋이 되기 전까지 실행한 쿼리를 하나로 인식함
+    }
 }
