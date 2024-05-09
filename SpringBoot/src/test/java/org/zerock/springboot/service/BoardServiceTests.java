@@ -5,11 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zerock.springboot.domain.Board;
-import org.zerock.springboot.dto.BoardDTO;
-import org.zerock.springboot.dto.PageRequestDTO;
-import org.zerock.springboot.dto.PageResponseDTO;
+import org.zerock.springboot.dto.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -49,7 +48,7 @@ public class BoardServiceTests {
     // delete
     @Test
     public void testRemove() {
-        boardService.remove(3L);
+        boardService.remove(100L);
     }
 
     //
@@ -101,6 +100,31 @@ public class BoardServiceTests {
             log.info(fileName);
         }
     }
+
+    @Test
+    public void testListWithAll() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .build();
+
+        PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
+
+        List<BoardListAllDTO> dtoList = responseDTO.getDtoList();
+
+        dtoList.forEach(boardListAllDTO -> {
+            log.info(boardListAllDTO.getBno() + " : " + boardListAllDTO.getTitle());
+
+            if (boardListAllDTO.getBoardImages() != null){
+                for (BoardImageDTO boardImage : boardListAllDTO.getBoardImages()){
+                    log.info(boardImage);
+                }
+            }
+            log.info("------------------------------------------");
+        });
+
+    }
+
 
 
 }

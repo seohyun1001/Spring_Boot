@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.zerock.springboot.domain.Board;
 import org.zerock.springboot.dto.*;
 import org.zerock.springboot.repository.BoardRepository;
+import org.zerock.springboot.repository.ReplyRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService{
     private final ModelMapper modelMapper;
     private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
 
     @Override
     public Long register(BoardDTO boardDTO){
@@ -58,6 +60,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void remove(Long bno) {
+        replyRepository.deleteByBoard_Bno(bno);
         boardRepository.deleteById(bno);
     }
 
@@ -100,7 +103,17 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
-        return null;
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListAllDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
     }
 
 
