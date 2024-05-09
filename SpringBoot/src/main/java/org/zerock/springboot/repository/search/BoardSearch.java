@@ -12,4 +12,7 @@ public interface BoardSearch {
 
     // 댓글 표시해서 목록 출력
     Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable);
+
+    // N + 1 문제
+    Page<BoardListReplyCountDTO> searchWithAll(String[] types, String keyword, Pageable pageable);
 }

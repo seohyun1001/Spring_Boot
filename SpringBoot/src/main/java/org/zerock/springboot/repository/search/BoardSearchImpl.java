@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.springframework.expression.spel.ast.Projection;
 import org.zerock.springboot.domain.Board;
 import org.zerock.springboot.domain.QBoard;
 import org.zerock.springboot.domain.QReply;
@@ -133,6 +132,26 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         List<BoardListReplyCountDTO> dtoList = dtoQuery.fetch();
         long count = dtoQuery.fetchCount();
         return new PageImpl<>(dtoList, pageable, count);
+    }
+
+    @Override
+    public Page<BoardListReplyCountDTO> searchWithAll(String[] types, String keyword, Pageable pageable) {
+        QBoard board = QBoard.board;
+        QReply reply = QReply.reply;
+
+        JPQLQuery<Board> boardJPQLQuery = from(board);
+        boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board)); // Left Join
+
+        getQuerydsl().applyPagination(pageable, boardJPQLQuery); // paging
+
+        List<Board> boardList = boardJPQLQuery.fetch();
+
+        boardList.forEach(board1 -> {
+            System.out.println(board1.getBno());
+            System.out.println(board1.getImageSet());
+            System.out.println("---------------------------------------------");
+        });
+        return null;
     }
 
 
