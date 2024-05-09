@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.springboot.domain.Board;
 import org.zerock.springboot.domain.BoardImage;
 import org.zerock.springboot.dto.BoardListReplyCountDTO;
@@ -148,6 +150,29 @@ public class BoardRepositoryTests {
         for (BoardImage boardImage : board.getImageSet()){ // list를 log로 출력
             log.info(boardImage);
         }
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testModifyImages() {
+        Optional<Board> result = boardRepository.findByIdWithImages(1L);
+
+        Board board = result.orElseThrow();
+
+        // 기존의 첨부파일 삭제
+        board.clearImages();
+
+        // 새로운 첨부파일들
+        for (int i = 0; i < 2; i++){
+            board.addImage(UUID.randomUUID().toString(), "updateFile" + i + ".jpg");
+        }
+        boardRepository.save(board);
+        // 결과 -> 현재 cascade 속성이 all로 지정되었기 때문에 상위 엔티티(board)의 상태 변화가
+        // 하위 엔티티(boardImage)까지 영향(bno가 null로 변함)을 주기는 했지만 삭제 되지는 않음
+        // 만일 하위 엔티티의 참조가 더 이상 없는 상태가 되면
+        // @OneToMany에 orphan-Removal 속성 값을 true로 지정해주어야 실제 삭제가 이루어짐
+        // -> Board 클래스의 @OneToMany 속성을 조정 (orphanRemoval = true)
     }
 
 }
