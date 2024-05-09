@@ -36,10 +36,13 @@ public class BoardServiceTests {
     @Test
     public void testModify() {
         BoardDTO boardDTO = BoardDTO.builder()
-                .bno(2L)
-                .title("update title --- 2")
-                .content("update content --- 2")
+                .bno(101L)
+                .title("update title --- 101")
+                .content("update content --- 101")
                 .build();
+
+        boardDTO.setFileNames(Arrays.asList(UUID.randomUUID() + "_zzz.jpg"));
+
         boardService.modify(boardDTO);
     }
 
@@ -88,7 +91,7 @@ public class BoardServiceTests {
     }
 
     @Test
-    public  void testReadAll() {
+    public void testReadAll() {
         Long bno = 101L;
         BoardDTO boardDTO = boardService.readOne(bno);
 
@@ -98,5 +101,6 @@ public class BoardServiceTests {
             log.info(fileName);
         }
     }
+
 
 }
