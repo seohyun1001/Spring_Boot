@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.zerock.springboot.domain.Board;
+import org.zerock.springboot.domain.BoardImage;
 import org.zerock.springboot.dto.BoardListReplyCountDTO;
 
 import java.util.List;
@@ -134,14 +135,19 @@ public class BoardRepositoryTests {
     @Test
     public void testReadWithImages() {
         // PK를 이용해 게시글 select 실행
-        Optional<Board> result = boardRepository.findById(1L);
+        Optional<Board> result = boardRepository.findByIdWithImages(1L);
         // 데이터가 없는 경우 에러발생
         Board board = result.orElseThrow();
 
         log.info(board);
         log.info("---------------------------------");
-        log.info(board.getImageSet());
+//        log.info(board.getImageSet());
         // -> 데이터베이스와 연결이 끝난 상태이므로 'no session'이라는 에러 메세지가 뜬다
         // -> 해결방법 : @Transactional을 추가함 -> 커밋이 되기 전까지 실행한 쿼리를 하나로 인식함
+
+        for (BoardImage boardImage : board.getImageSet()){ // list를 log로 출력
+            log.info(boardImage);
+        }
     }
+
 }
