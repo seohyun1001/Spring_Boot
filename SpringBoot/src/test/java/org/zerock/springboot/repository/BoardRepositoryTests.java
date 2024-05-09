@@ -12,6 +12,7 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.springboot.domain.Board;
 import org.zerock.springboot.domain.BoardImage;
+import org.zerock.springboot.dto.BoardListAllDTO;
 import org.zerock.springboot.dto.BoardListReplyCountDTO;
 
 import java.util.List;
@@ -213,14 +214,21 @@ public class BoardRepositoryTests {
     public void testSearchImageReplyCount() {
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
-        boardRepository.searchWithAll(null,null, pageable);
+//        boardRepository.searchWithAll(null,null, pageable);
         // 목록을 가져오는 쿼리 한 번과 하나의 게시물 마다 board_image에 대한 쿼리가 실행됨
         // -> 이를 N + 1 문제라 한다
         // N : 게시물 마다 각각 실행되는 쿼리
         // 1 : 목록을 가져오는 쿼리
         // -> @BatchSize를 이용하여 'N번'에 해당하는 쿼리를 모아 한 번에 실행 가능하게 해줌
         // Board imageSet에 적용
+        String[] t = new String[]{"t"};
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(t, "4", pageable);
+        log.info("------------------------");
+        log.info(result.getTotalElements());
+
+        result.getContent().forEach(boardListAllDTO -> log.info(boardListAllDTO));
+
     }
-    
+
 
 }
