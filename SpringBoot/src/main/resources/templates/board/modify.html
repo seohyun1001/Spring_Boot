@@ -138,9 +138,39 @@
         e.stopPropagation()
 
         formObj.action = `/board/modify?${link}`
+
+        // 첨부파일을 input hidden 타입으로 추가
+        appendFileData()
+
+        // 삭제 대상 파일들 삭제
+        callRemoveFiles()
+
         formObj.method = 'post'
         formObj.submit()
     }, false)
+
+    // appendFileData
+    function appendFileData() {
+        const target = document.querySelector(".uploadHidden")
+        const uploadFiles = uploadResult.querySelectorAll("img")
+
+        let str = ''
+
+        for (let i = 0; i < uploadFiles.length; i++){
+            const uploadFile = uploadFiles[i]
+            const imgLink = uploadFile.getAttribute("data-src")
+
+            str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+        }
+        target.innerHTML = str;
+    }
+
+    // callRemoveFiles
+    function callRemoveFiles() {
+        removeFileList.forEach( ({uuid, fileName}) => {
+            removeFileToServer({uuid, fileName})
+        })
+    }
 
     // remove 버튼 동작
     document.querySelector(".removeBtn").addEventListener("click", function (e){
@@ -226,6 +256,7 @@
             </div>`
         uploadResult.innerHTML += str
     }
+
 
 </script>
 </html>
