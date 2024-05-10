@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.springboot.dto.BoardDTO;
-import org.zerock.springboot.dto.BoardListReplyCountDTO;
-import org.zerock.springboot.dto.PageRequestDTO;
-import org.zerock.springboot.dto.PageResponseDTO;
+import org.zerock.springboot.dto.*;
 import org.zerock.springboot.service.BoardService;
 
 @Controller
@@ -27,14 +24,15 @@ public class BoardController {
     // 게시글에 댓글 개수 표현하는 목록 출력으로 변경
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+//        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+//        log.info(responseDTO); -> BoardListAllDTO로 타입 변경
+        PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
     }
 
     @GetMapping("/register")
     public void registerGET() {
-
     }
 
     @PostMapping("/register")

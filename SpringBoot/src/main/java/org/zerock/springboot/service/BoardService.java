@@ -49,7 +49,7 @@ public interface BoardService {
                 // uuid와 파일이름을 나누고 있음
                 // arr[0] : uuid
                 // arr[1] : 파일이름.확장자
-                String[] arr = fileName.split("_");
+                String[] arr = fileName.split("_", 2);
                 board.addImage(arr[0], arr[1]);
             });
         }
