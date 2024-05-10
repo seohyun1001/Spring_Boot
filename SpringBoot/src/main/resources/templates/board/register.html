@@ -47,7 +47,45 @@
             </div> <!-- end card -->
         </div> <!-- end col -->
     </div> <!-- end row -->
-</div>
+
+    <!-- 첨부파일 섬네일을 보여줄 부분 -->
+    <div class="row mt-3">
+        <div class="col ">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+            </div>
+        </div>
+    </div>
+
+    <!-- 첨부파일 추가를 위한 모달창 -->
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- header -->
+                <div class="modal-header">
+                    <!-- 제목 -->
+                    <h5 class="modal-title">Upload File</h5>
+                    <!-- x 버튼 -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- body : 첨부파일 추가 부분 -->
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control" multiple>
+                    </div>
+                </div>
+                <!-- footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- register modal -->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/upload.js"></script>
+
+</div> <!-- end layout fragment -->
 
 
 <script layout:fragment="script" th:inline="javascript">
@@ -62,6 +100,14 @@
         }
         alert(errorMsg)
     }
+
+    // 업로드 모달
+    const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+    document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
+        e.stopPropagation()
+        e.preventDefault()
+        uploadModal.show()
+    }, false)
 
 </script>
 </html>
