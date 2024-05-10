@@ -32,7 +32,7 @@ public class BoardController {
         model.addAttribute("responseDTO", responseDTO);
     }
 
-    @GetMapping("register")
+    @GetMapping("/register")
     public void registerGET() {
 
     }
