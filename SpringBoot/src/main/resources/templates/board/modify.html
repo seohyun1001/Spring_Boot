@@ -55,6 +55,53 @@
             </div> <!-- end card -->
         </div> <!-- end col -->
     </div> <!-- end row -->
+
+    <!-- 첨부파일 섬네일 보여줄 부분 -->
+    <div class="row mt-3">
+        <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+                <th:block th:each="fileName:${dto.fileNames}">
+                    <div class="card col-4" th:with = "arr = ${fileName.split('_')}">
+                        <div class="card-header d-flex justify-content-center">
+                            [[${arr[1]}]]
+                            <button class="btn-sm btn-danger"
+                                th:onclick="removeFile([[${arr[0]}]], [[${arr[1]}]], this)">X</button>
+                        </div>
+                        <div class="card-body">
+                            <img th:src="|/view/s_${fileName}|" th:data-src="${fileName}">
+                        </div>
+                    </div> <!-- card -->
+                </th:block>
+            </div>
+        </div>
+    </div>
+
+    <!-- 첨부파일 추가를 위한 모달창 -->
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- header -->
+                <div class="modal-header">
+                    <!-- 제목 -->
+                    <h5 class="modal-title">Upload File</h5>
+                    <!-- x 버튼 -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- body : 첨부파일 추가 부분 -->
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control" multiple>
+                    </div>
+                </div>
+                <!-- footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- register modal -->
+
 </div>
 
 
@@ -72,9 +119,11 @@
         alert(errorMsg)
     }
 
+    // 변수 지정
     const link = [[${pageRequestDTO.getLink()}]]
     const formObj = document.querySelector("#f1")
 
+    // modify 버튼 동작
     document.querySelector(".modBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
@@ -84,6 +133,7 @@
         formObj.submit()
     }, false)
 
+    // remove 버튼 동작
     document.querySelector(".removeBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
@@ -93,6 +143,7 @@
         formObj.submit()
     }, false)
 
+    // list 버튼 동작
     document.querySelector(".listBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
@@ -100,5 +151,26 @@
         formObj.reset()
         self.location = `/board/list?${link}`
     }, false)
+
+    // 첨부파일 삭제 함수
+    // 삭제할 파일의 uuid, fileName을 저장하는 임시 배열
+    const removeFileList = []
+    function removeFile(uuid, fileName, obj){
+        if (!confirm("파일을 삭제하시겠습니까?")){
+            // 확인 메세지 박스에서 취소를 누를 경우 return
+            return
+        }
+        console.log(uuid)
+        console.log(fileName)
+        console.log(obj)
+
+        // uuid, fileName을 배열에 저장
+        removeFileList.push({uuid, fileName})
+        // 버튼의 card div 변수에 저장
+        const targetDiv = obj.closest(".card")
+        // card div 삭제
+        targetDiv.remove()
+    }
+
 </script>
 </html>
