@@ -6,12 +6,19 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-@RequiredArgsConstructor
-public class CustomUserDetailService implements UserDetailsService {
+//@RequiredArgsConstructor
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private PasswordEncoder passwordEncoder;
+    public CustomUserDetailsService() {
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -20,7 +27,8 @@ public class CustomUserDetailService implements UserDetailsService {
         // 반환할 UserDetails 생성하기
         UserDetails userDetails = User.builder()
                 .username("user1")
-                .password("1111")
+//                .password("1111")
+                .password(passwordEncoder.encode("1111")) // 패스워드 인코딩 필요
                 .authorities("ROLE_USER")
                 .build();
 
