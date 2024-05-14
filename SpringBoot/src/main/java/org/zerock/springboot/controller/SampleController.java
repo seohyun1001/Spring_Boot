@@ -110,5 +110,10 @@ public class SampleController {
 
     }
 
+    @GetMapping("/")
+    public String index() {
+        return "forward:/board/list";
+    }
+
 
 }
