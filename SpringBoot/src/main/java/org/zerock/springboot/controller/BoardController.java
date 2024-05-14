@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.w3c.dom.stylesheets.LinkStyle;
+
 import org.zerock.springboot.dto.*;
 import org.zerock.springboot.service.BoardService;
 
@@ -65,6 +65,7 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read","/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       layout:decorate="~{layout/basic.html}">
 <head>
     <title>Board Read</title>
@@ -41,12 +42,12 @@
                         <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
                     </div>
 
-                    <div class="my-4">
+                    <div class="my-4" th:with="user=${#authentication.principal}">
                         <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
                             <a th:href="|@{/board/list}?${link}|" class="text-decoration-none">
                             <button type="button" class="btn btn-primary">List</button>
                             </a>
-                            <a th:href="|@{/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                            <a th:if="${user != null && user.username == dto.writer}" th:href="|@{/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">
                             <button type="button" class="btn btn-secondary">Modify</button>
                             </a>
                         </div>
@@ -101,9 +102,9 @@
                         <span class="input-group-text">Reply Text</span>
                         <input type="text" class="form-control replyText">
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3" th:with="user=${#authentication.principal}">
                         <span class="input-group-text">Replyer</span>
-                        <input type="text" class="form-control replyer">
+                        <input type="text" class="form-control replyer" th:value="${user.username}" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -144,6 +145,8 @@
 
 
 <script layout:fragment="script" th:inline="javascript">
+    // 현재 로그인한 사용자의 아이디
+    const currentUser = [[${#authentication.principal.username}]]
 
     const errors = [[${errors}]]
     console.log(errors)
@@ -220,8 +223,11 @@
         registerModal.hide()
     }, false)
 
+
+
     // 모달창 내부의 Register버튼 : 인풋태그의 데이터를 reply.js 보내어 데이터를 저장하고 댓글 목록을 갱신하는 함수
     registerBtn.addEventListener("click", function (e){
+
         // Json타입으로 변환하기 쉽도록 key:value형식으로 데이터를 저장
         const replyObj = {
             bno:bno, // 댓글번호
@@ -236,13 +242,15 @@
             registerModal.hide()
             // 저장한 데이터 초기화
             replyText.value = ''
-            replyer.value = ''
+            // replyer.value = ''
             // 댓글 목록 갱신 goLast가 true이기 때문에 마지막 페이지로 이동
             printReplies(1, 10, true)
         }).catch(e => {
             alert("Exception---")
         })
     }, false)
+
+
 
     function printReplies(page, size, goLast){
         getList({bno, page, size, goLast}).then(
@@ -285,6 +293,8 @@
 
     }, false)
 
+
+
     // modifyModal
     const modifyModal = new bootstrap.Modal(document.querySelector(".modifyModal"))
 
@@ -293,6 +303,10 @@
     const modifyBtn = document.querySelector(".modifyBtn")
     const removeBtn = document.querySelector(".removeBtn")
     const closeModifyBtn = document.querySelector(".closeModifyBtn")
+
+
+
+    let hasAuth = false // 댓글의 작성자와 currentUser의 일치 여부
 
     replyList.addEventListener("click", function (e){
 
@@ -316,12 +330,26 @@
             replyHeader.innerHTML = reply.rno
             modifyText.value = reply.replyText
             modifyModal.show()
+
+            hasAuth = currentUser === reply.replyer // 댓글의 작성자와 현재 사용자 일치 여부 확인
+
         }).catch(e => alert('error'))
 
     }, false)
 
+
+
+
+
     // 댓글 수정과 화면 갱신
     modifyBtn.addEventListener("click", function (e){
+
+        if (!hasAuth){
+            alert("댓글 작성자만 수정이 가능합니다.")
+            modifyModal.hide()
+            return
+        }
+
         // 서버에 보낼 데이터를 설정
         const replyObj = {
             bno:bno, // 게시글 번호
@@ -342,8 +370,17 @@
         modifyModal.hide()
     }, false)
 
+
+
     // 댓글 삭제
     removeBtn.addEventListener("click", function (e){
+
+        if (!hasAuth){
+            alert("댓글 작성자만 수정이 가능합니다.")
+            modifyModal.hide()
+            return
+        }
+
         removeReply(replyHeader.innerHTML).then(result => {
             alert(result.rno + ' 댓글이 삭제되었습니다.')
             replyText.value = ''
