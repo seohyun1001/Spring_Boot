@@ -21,9 +21,9 @@ public class MemberSecurityDTO extends User {
     private boolean social;
 
     // 생성자
-    private MemberSecurityDTO(String username, String password, String email,
-                              boolean del, boolean social,
-                              Collection<? extends GrantedAuthority> authorities) {
+    public MemberSecurityDTO(String username, String password, String email,
+                             boolean del, boolean social,
+                             Collection<? extends GrantedAuthority> authorities) {
         // 부모 클래스의 생성자를 부름
         super(username, password, authorities);
 
