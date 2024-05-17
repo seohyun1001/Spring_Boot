@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.zerock.springboot.domain.Member;
 import org.zerock.springboot.domain.MemberRole;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -44,6 +45,27 @@ public class MemberRepositoryTests {
             // 데이터가 없으면 insert / 데이터가 있으면 update 역할
             memberRepository.save(member);
         });
+
+    }
+
+
+
+    // 회원 조회 테스트
+    @Test
+    public void testRead() {
+
+        // 데이터베이스에서 mid를 기준으로 데이터를 취득
+        Optional<Member> result = memberRepository.getWithRoles("member100");
+        // 에러 확인
+        Member member = result.orElseThrow();
+
+        // 전체 데이터 출력
+        log.info(member);
+        // Role 데이터 출력
+        log.info(member.getRoleSet());
+        
+        member.getRoleSet().forEach(memberRole -> log.info(memberRole.name()));
+
     }
 
 }
